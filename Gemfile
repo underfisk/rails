@@ -46,6 +46,8 @@ gem "connection_pool", require: false
 # for railties app_generator_test
 gem "bootsnap", ">= 1.1.0", require: false
 
+gem "zeitwerk", "~> 1.0.0.beta" if RUBY_ENGINE == "ruby"
+
 # Active Job
 group :job do
   gem "resque", require: false
