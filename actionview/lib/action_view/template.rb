@@ -114,9 +114,9 @@ module ActionView
 
     extend Template::Handlers
 
-    attr_accessor :locals, :formats, :variants, :virtual_path
+    attr_accessor :formats, :variants, :virtual_path
 
-    attr_reader :source, :identifier, :handler, :original_encoding, :updated_at
+    attr_reader :source, :identifier, :handler, :original_encoding, :updated_at, :locals
 
     # This finalizer is needed (and exactly with a proc inside another proc)
     # otherwise templates leak in development.
@@ -136,7 +136,7 @@ module ActionView
       @handler           = handler
       @compiled          = false
       @original_encoding = nil
-      @locals            = details[:locals] || []
+      @locals            = details.fetch(:locals)
       @virtual_path      = details[:virtual_path]
       @updated_at        = details[:updated_at] || Time.now
       @formats           = Array(format).map { |f| f.respond_to?(:ref) ? f.ref : f  }
@@ -350,7 +350,7 @@ module ActionView
       def locals_code
         # Only locals with valid variable names get set directly. Others will
         # still be available in local_assigns.
-        locals = @locals - Module::RUBY_RESERVED_KEYWORDS
+        locals = @locals.map(&:to_s) - Module::RUBY_RESERVED_KEYWORDS
         locals = locals.grep(/\A@?(?![A-Z0-9])(?:[[:alnum:]_]|[^\0-\177])+\z/)
 
         # Assign for the same variable is to suppress unused variable warning

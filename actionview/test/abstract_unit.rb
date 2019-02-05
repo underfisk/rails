@@ -59,7 +59,7 @@ module RenderERBUtils
       string.strip,
       "test template",
       ActionView::Template.handler_for_extension(:erb),
-      {})
+      locals: [])
 
     template.render(ActionView::Base.empty, {}).strip
   end
